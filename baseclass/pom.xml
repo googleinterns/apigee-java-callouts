@@ -3,14 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.apigee</groupId>
-  <artifactId>edge-callout-baseclass</artifactId>
-  <version>20191101</version>
-  <name>EdgeCustomEncryptor</name>
-  <url>http://maven.apache.org</url>
+  <artifactId>edge-java-callout-baseclass</artifactId>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <properties>
-    <apiproxy.java.rsrc.dir>../bundle/apiproxy/resources/java</apiproxy.java.rsrc.dir>
     <apigee.expressions.version>1.0.0</apigee.expressions.version>
     <apigee.message.flow.version>1.0.0</apigee.message.flow.version>
     <jdk.target.version>1.8</jdk.target.version>
@@ -31,51 +28,48 @@
       <artifactId>expressions</artifactId>
       <version>${apigee.expressions.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>${mockito-core.version}</version>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
-              <includeScope>runtime</includeScope>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>false</overWriteSnapshots>
-              <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-dependency-plugin</artifactId>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>copy-dependencies</id>-->
+<!--            <phase>prepare-package</phase>-->
+<!--            <goals>-->
+<!--              <goal>copy-dependencies</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <outputDirectory>${project.build.directory}/lib</outputDirectory>-->
+<!--              <includeScope>runtime</includeScope>-->
+<!--              <overWriteReleases>false</overWriteReleases>-->
+<!--              <overWriteSnapshots>false</overWriteSnapshots>-->
+<!--              <overWriteIfNewer>true</overWriteIfNewer>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.8.1</version>
         <configuration>
           <source>${jdk.target.version}</source>
           <target>${jdk.target.version}</target>
@@ -89,7 +83,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.2.0</version>
         <configuration>
           <archive>
             <!-- do not include the pom.xml file in the generated jar -->
@@ -97,71 +91,6 @@
           </archive>
         </configuration>
       </plugin>
-
-
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <configuration>
-              <tasks>
-                <copy todir="${apiproxy.java.rsrc.dir}">
-                  <fileset dir="${project.build.directory}">
-                    <include name="${project.build.finalName}.jar"/>
-                    <!-- copy any required dependencies tht are not
-                         already included in the Edge runtime: -->
-                    <include name="lib/*.jar"/>
-                    <exclude name="lib/message-flow-1.0.0.jar"/>
-                    <exclude name="lib/expressions-1.0.0.jar"/>
-                  </fileset>
-                  <mapper type="flatten"/>
-                </copy>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M2</version>
-        <executions>
-          <execution>
-            <id>enforce-maven</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireMavenVersion>
-                  <version>3.0.5</version>
-                </requireMavenVersion>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
-        <version>2.7</version>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>display-dependency-updates</goal>
-              <goal>display-plugin-updates</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
 

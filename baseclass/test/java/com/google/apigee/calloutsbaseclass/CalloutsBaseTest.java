@@ -1,4 +1,18 @@
-package com.google.apigee.calloutsbaseclass.tests;
+/*
+ * Copyright 2020 Google LLC
+ *
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ *
+ * <p>https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.apigee.calloutsbaseclass;
 
 import com.apigee.flow.message.MessageContext;
 import com.google.apigee.calloutbaseclass.CalloutsBase;
@@ -15,20 +29,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Copyright 2020 Google LLC
- *
- * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of the License at
- *
- * <p>https://www.apache.org/licenses/LICENSE-2.0
- *
- * <p>Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
- * limitations under the License.
- */
-public class CalloutsBaseTest {
+public final class CalloutsBaseTest {
 
   private static final String ERROR_FLOW_VARIABLE = "error";
   private static final String EXCEPTION_FLOW_VARIABLE = "exception";
@@ -43,7 +44,7 @@ public class CalloutsBaseTest {
   private static final String TEST_LOG_STATEMENT = "asdf123";
   private static final String TEST_LOG_STATEMENT2 = "defgh5678";
 
-  static class CalloutsBaseTestImpl extends CalloutsBase {
+  private static class CalloutsBaseTestImpl extends CalloutsBase {
     public CalloutsBaseTestImpl(Map properties) {
       super(properties);
     }

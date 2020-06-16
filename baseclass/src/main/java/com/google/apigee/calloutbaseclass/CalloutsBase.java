@@ -1,3 +1,17 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ *
+ * <p>https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.apigee.calloutbaseclass;
 
 import com.apigee.flow.message.MessageContext;
@@ -10,61 +24,58 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Copyright 2020 Google LLC
- *
- * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of the License at
- *
- * <p>https://www.apache.org/licenses/LICENSE-2.0
- *
- * <p>Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * <p>Base Class for Apigee Java Callouts containing commonly used methods across callouts.
+/*
+ * Base Class for Apigee Java Callouts containing commonly used methods across callouts.
  */
 public abstract class CalloutsBase {
-
-  private static final String commonErrorPatternString = "^(.+?)[:;] (.+)$";
-  private static final String variableReferencePatternString =
-      "(.*?)\\{([^\\{\\} :][^\\{\\} ]*?)\\}(.*?)";
 
   private static final String ERROR_FLOW_VARIABLE = "error";
   private static final String EXCEPTION_FLOW_VARIABLE = "exception";
   private static final String EXCEPTION_STACKTRACE_FLOW_VARIABLE = "exception_stacktrace";
   private static final String LOG_FLOW_VARIABLE = "log";
 
+  // Matches common error strings (e.g. matches "example: error")
+  private static final String commonErrorPatternString = "^(.+?)[:;] (.+)$";
   private static final Pattern commonErrorPattern = Pattern.compile(commonErrorPatternString);
+  // Matches flow variable reference (e.g. matches "{request.test}")
+  private static final String variableReferencePatternString =
+      "(.*?)\\{([^\\{\\} :][^\\{\\} ]*?)\\}(.*?)";
   private static final Pattern variableReferencePattern =
       Pattern.compile(variableReferencePatternString);
 
   private final Map<String, String> properties;
 
+  /**
+   * Converts the untyped map into a HashMap with String keys and values for properties field.
+   *
+   * @param properties untyped map
+   */
   public CalloutsBase(Map properties) {
     this.properties = convertMap(properties);
   }
 
   /**
-   * Convert untyped map to HashMap with String keys and values
+   * Convert untyped map to HashMap with String keys and values.
    *
    * @param properties untyped map
    * @return HashMap with String keys and values from untyped map
+   * @throws IllegalArgumentException if map keys or values not of type String
    */
   private static Map<String, String> convertMap(Map properties) {
     Map<String, String> stringHashMap = new HashMap<>();
     for (Object key : properties.keySet()) {
       Object value = properties.get(key);
-      if ((key instanceof String) && (value instanceof String)) {
-        stringHashMap.put((String) key, (String) value);
+      if (!(key instanceof String) || !(value instanceof String)) {
+        throw new IllegalArgumentException(
+            String.format("Key: %s and value: %s not of type String.", key, value));
       }
+      stringHashMap.put((String) key, (String) value);
     }
     return Collections.unmodifiableMap(stringHashMap);
   }
 
   /**
-   * Retrieves a required property from properties map. Returns null if not found in properties map.
+   * Retrieves an optional property from properties map. Returns null if not found in properties map.
    *
    * @param propertyName Name of property to retrieve value
    * @param messageContext Message Context
@@ -74,9 +85,8 @@ public abstract class CalloutsBase {
     if (!this.properties.containsKey(propertyName)) {
       return null;
     }
-    String value = this.properties.get(propertyName);
-    value = resolveVariableReferences(value.trim(), messageContext);
-    if (value.equals("")) {
+    String value = resolveVariableReferences(this.properties.get(propertyName).trim(), messageContext);
+    if ("".equals(value)) {
       return null;
     }
     return value;
@@ -89,14 +99,14 @@ public abstract class CalloutsBase {
    * @param propertyName Name of property to retrieve value
    * @param messageContext Message Context
    * @return Value of property in properties map
+   * @throws IllegalArgumentException if the propertyName does not exist in properties map
    */
   public String getRequiredProperty(String propertyName, MessageContext messageContext) {
     if (!this.properties.containsKey(propertyName)) {
       throw new IllegalArgumentException(propertyName + " does not exist in properties");
     }
-    String value = this.properties.get(propertyName);
-    value = resolveVariableReferences(value.trim(), messageContext);
-    if (value.equals("")) {
+    String value = resolveVariableReferences(this.properties.get(propertyName).trim(), messageContext);
+    if ("".equals(value)) {
       throw new IllegalArgumentException(propertyName + " resolves to an empty string");
     }
     return value;
