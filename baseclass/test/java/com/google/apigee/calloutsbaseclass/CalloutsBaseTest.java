@@ -31,10 +31,10 @@ import java.util.Map;
 
 public final class CalloutsBaseTest {
 
-  private static final String ERROR_FLOW_VARIABLE = "error";
-  private static final String EXCEPTION_FLOW_VARIABLE = "exception";
-  private static final String EXCEPTION_STACKTRACE_FLOW_VARIABLE = "exception_stacktrace";
-  private static final String LOG_FLOW_VARIABLE = "log";
+  private static final String ERROR_FLOW_VARIABLE = "callout_error";
+  private static final String EXCEPTION_FLOW_VARIABLE = "callout_exception";
+  private static final String EXCEPTION_STACKTRACE_FLOW_VARIABLE = "callout_exception_stacktrace";
+  private static final String LOG_FLOW_VARIABLE = "callout_log";
   private static final String OPTIONAL_VARIABLE_KEY = "optionalVar";
   private static final String OPTIONAL_VARIABLE_VALUE = "optionalValue";
   private static final String OPTIONAL_VARIABLE_EMPTY_VALUE_KEY = "optionalVarEmpty";

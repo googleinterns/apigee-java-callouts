@@ -29,10 +29,10 @@ import java.util.regex.Pattern;
  */
 public abstract class CalloutsBase {
 
-  private static final String ERROR_FLOW_VARIABLE = "error";
-  private static final String EXCEPTION_FLOW_VARIABLE = "exception";
-  private static final String EXCEPTION_STACKTRACE_FLOW_VARIABLE = "exception_stacktrace";
-  private static final String LOG_FLOW_VARIABLE = "log";
+  private static final String ERROR_FLOW_VARIABLE = "callout_error";
+  private static final String EXCEPTION_FLOW_VARIABLE = "callout_exception";
+  private static final String EXCEPTION_STACKTRACE_FLOW_VARIABLE = "callout_exception_stacktrace";
+  private static final String LOG_FLOW_VARIABLE = "callout_log";
 
   // Matches common error strings (e.g. matches "example: error")
   private static final String commonErrorPatternString = "^(.+?)[:;] (.+)$";
