@@ -46,32 +46,12 @@ public abstract class CalloutsBase {
   private final Map<String, String> properties;
 
   /**
-   * Converts the untyped map into a HashMap with String keys and values for properties field.
+   * Constructor taking in String key and value properties map
    *
-   * @param properties untyped map
+   * @param properties String key and value map
    */
-  public CalloutsBase(Map properties) {
-    this.properties = convertMap(properties);
-  }
-
-  /**
-   * Convert untyped map to HashMap with String keys and values.
-   *
-   * @param properties untyped map
-   * @return HashMap with String keys and values from untyped map
-   * @throws IllegalArgumentException if map keys or values not of type String
-   */
-  private static Map<String, String> convertMap(Map properties) {
-    Map<String, String> stringHashMap = new HashMap<>();
-    for (Object key : properties.keySet()) {
-      Object value = properties.get(key);
-      if (!(key instanceof String) || !(value instanceof String)) {
-        throw new IllegalArgumentException(
-            String.format("Key: %s and value: %s not of type String.", key, value));
-      }
-      stringHashMap.put((String) key, (String) value);
-    }
-    return Collections.unmodifiableMap(stringHashMap);
+  public CalloutsBase(Map<String, String> properties) {
+    this.properties = properties;
   }
 
   /**
@@ -93,13 +73,12 @@ public abstract class CalloutsBase {
   }
 
   /**
-   * Retrieves a required property from properties map. Throws IllegalArgumentException if property
-   * does not exist in map.
+   * Retrieves a required property from properties map.
    *
    * @param propertyName Name of property to retrieve value
    * @param messageContext Message Context
    * @return Value of property in properties map
-   * @throws IllegalArgumentException if the propertyName does not exist in properties map
+   * @throws IllegalArgumentException if the propertyName does not exist in properties map or resolves to an empty string.
    */
   public String getRequiredProperty(String propertyName, MessageContext messageContext) {
     if (!this.properties.containsKey(propertyName)) {

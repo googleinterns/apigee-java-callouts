@@ -35,12 +35,16 @@ public final class CalloutsBaseTest {
   private static final String EXCEPTION_FLOW_VARIABLE = "callout_exception";
   private static final String EXCEPTION_STACKTRACE_FLOW_VARIABLE = "callout_exception_stacktrace";
   private static final String LOG_FLOW_VARIABLE = "callout_log";
+  private static final String NONEXISTENT_VARIABLE_REFERENCE = "{fake.variable}";
   private static final String OPTIONAL_VARIABLE_KEY = "optionalVar";
   private static final String OPTIONAL_VARIABLE_VALUE = "optionalValue";
   private static final String OPTIONAL_VARIABLE_EMPTY_VALUE_KEY = "optionalVarEmpty";
   private static final String REQUIRED_VARIABLE_KEY = "requiredVar";
   private static final String REQUIRED_VARIABLE_VALUE = "requiredValue";
   private static final String REQUIRED_VARIABLE_EMPTY_VALUE_KEY = "requiredVarEmpty";
+  private static final String TEST_FLOW_VALUE = "test123";
+  private static final String TEST_FLOW_VARIABLE = "request.queryparam.testFlowVar";
+  private static final String TEST_FLOW_VARIABLE_REFERENCE = "{request.queryparam.testFlowVar}";
   private static final String TEST_LOG_STATEMENT = "asdf123";
   private static final String TEST_LOG_STATEMENT2 = "defgh5678";
 
@@ -80,7 +84,7 @@ public final class CalloutsBaseTest {
     }
   }
 
-  CalloutsBaseTestImpl calloutsBase;
+  private CalloutsBaseTestImpl calloutsBase;
   @Spy FakeMessageContext messageContext;
 
   @Before
@@ -94,7 +98,7 @@ public final class CalloutsBaseTest {
     calloutsBase = new CalloutsBaseTestImpl(properties);
 
     messageContext.getVariables().clear();
-    messageContext.setVariable("request.queryparam.testFlowVar", "test123");
+    messageContext.setVariable(TEST_FLOW_VARIABLE, TEST_FLOW_VALUE);
   }
 
   @Test
@@ -138,11 +142,27 @@ public final class CalloutsBaseTest {
 
   @Test
   public void testResolveVariableReferences() {
-    String expected = (String) messageContext.getVariable("request.queryparam.testFlowVar");
+    String expected = (String) messageContext.getVariable(TEST_FLOW_VARIABLE);
     String actual =
-        calloutsBase.resolveVariableReferences("{request.queryparam.testFlowVar}", messageContext);
+        calloutsBase.resolveVariableReferences(TEST_FLOW_VARIABLE_REFERENCE, messageContext);
 
     Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testResolveVariableReferenceNonExistentReference() {
+    String actual =
+            calloutsBase.resolveVariableReferences(NONEXISTENT_VARIABLE_REFERENCE, messageContext);
+
+    Assert.assertEquals("", actual);
+  }
+
+  @Test
+  public void testResolveVariableReferenceNotAReference() {
+    String actual =
+            calloutsBase.resolveVariableReferences(TEST_FLOW_VARIABLE, messageContext);
+
+    Assert.assertEquals(TEST_FLOW_VARIABLE, actual);
   }
 
   @Test
