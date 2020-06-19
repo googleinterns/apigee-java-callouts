@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2020 Google LLC
  *
  * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
@@ -11,33 +11,32 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.apigee.calloutbaseclass;
 
 import com.apigee.flow.message.MessageContext;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
- * Base Class for Apigee Java Callouts containing commonly used methods across callouts.
- */
-public abstract class CalloutsBase {
+/** Base Class for Apigee Java Callouts containing commonly used methods across callouts. */
+public abstract class CalloutBase {
 
   private static final String ERROR_FLOW_VARIABLE = "callout_error";
   private static final String EXCEPTION_FLOW_VARIABLE = "callout_exception";
   private static final String EXCEPTION_STACKTRACE_FLOW_VARIABLE = "callout_exception_stacktrace";
   private static final String LOG_FLOW_VARIABLE = "callout_log";
 
-  // Matches common error strings (e.g. matches "example: error")
+  // Matches two words separated by a colon or semicolon and a space, intended for common error
+  // strings.
+  // (e.g. matches "example: error" or "example; error")
   private static final String commonErrorPatternString = "^(.+?)[:;] (.+)$";
   private static final Pattern commonErrorPattern = Pattern.compile(commonErrorPatternString);
-  // Matches flow variable reference (e.g. matches "{request.test}")
+  // Matches any string between two curly braces, intended for flow variable references
+  // (e.g. matches "{request.test}", but also matches "{asdf}")
   private static final String variableReferencePatternString =
       "(.*?)\\{([^\\{\\} :][^\\{\\} ]*?)\\}(.*?)";
   private static final Pattern variableReferencePattern =
@@ -50,26 +49,28 @@ public abstract class CalloutsBase {
    *
    * @param properties String key and value map
    */
-  public CalloutsBase(Map<String, String> properties) {
+  public CalloutBase(Map<String, String> properties) {
     this.properties = properties;
   }
 
   /**
-   * Retrieves an optional property from properties map. Returns null if not found in properties map.
+   * Retrieves an optional String property from properties map or empty if property does not exist
+   * in properties.
    *
    * @param propertyName Name of property to retrieve value
    * @param messageContext Message Context
-   * @return Value of property in properties map
+   * @return Optional of property value in properties map or empty
    */
-  public String getOptionalProperty(String propertyName, MessageContext messageContext) {
+  public Optional<String> getOptionalProperty(String propertyName, MessageContext messageContext) {
     if (!this.properties.containsKey(propertyName)) {
-      return null;
+      return Optional.empty();
     }
-    String value = resolveVariableReferences(this.properties.get(propertyName).trim(), messageContext);
+    String value =
+        resolveVariableReferences(this.properties.get(propertyName).trim(), messageContext);
     if ("".equals(value)) {
-      return null;
+      return Optional.empty();
     }
-    return value;
+    return Optional.of(value);
   }
 
   /**
@@ -78,26 +79,21 @@ public abstract class CalloutsBase {
    * @param propertyName Name of property to retrieve value
    * @param messageContext Message Context
    * @return Value of property in properties map
-   * @throws IllegalArgumentException if the propertyName does not exist in properties map or resolves to an empty string.
+   * @throws IllegalArgumentException if the propertyName does not exist in properties map or
+   *     resolves to an empty string.
    */
   public String getRequiredProperty(String propertyName, MessageContext messageContext) {
-    if (!this.properties.containsKey(propertyName)) {
-      throw new IllegalArgumentException(propertyName + " does not exist in properties");
-    }
-    String value = resolveVariableReferences(this.properties.get(propertyName).trim(), messageContext);
-    if ("".equals(value)) {
-      throw new IllegalArgumentException(propertyName + " resolves to an empty string");
-    }
-    return value;
+    return getOptionalProperty(propertyName, messageContext)
+        .orElseThrow(IllegalArgumentException::new);
   }
 
   /**
    * Resolves references to flow variables (i.e. variable references between two curly braces
-   * {request.example}).
+   * {request.example}) or the spec if not a variable reference.
    *
    * @param spec The potential flow variable reference
    * @param messageContext Message Context
-   * @return Resolved value of flow variable reference or the spec if not a reference
+   * @return Resolved flow variable reference or spec
    */
   public String resolveVariableReferences(String spec, MessageContext messageContext) {
     Matcher matcher = variableReferencePattern.matcher(spec);
@@ -139,9 +135,9 @@ public abstract class CalloutsBase {
   }
 
   /**
-   * Prints statement and stores it in log flow variable.
+   * Stores statement in log flow variable.
    *
-   * @param logStatement Message to print
+   * @param logStatement Message to log
    * @param messageContext Message Context
    */
   public void log(Object logStatement, MessageContext messageContext) {
@@ -156,7 +152,6 @@ public abstract class CalloutsBase {
                 stackTraceElement.getFileName(),
                 stackTraceElement.getLineNumber());
     String logMessage = logStatement + "\t\t" + context;
-    System.out.println(logMessage);
     String prevLogs =
         messageContext.getVariable(LOG_FLOW_VARIABLE) == null
             ? ""
@@ -171,9 +166,9 @@ public abstract class CalloutsBase {
    */
   private StackTraceElement getStackTraceElement() {
     for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-      if (!ste.getMethodName().equals("getStackTrace")
-          && !ste.getMethodName().equals("getStackTraceElement")
-          && !ste.getMethodName().equals("log")) {
+      if (!"getStackTrace".equals(ste.getMethodName())
+          && !"getStackTraceElement".equals(ste.getMethodName())
+          && !"log".equals(ste.getMethodName())) {
         return ste;
       }
     }

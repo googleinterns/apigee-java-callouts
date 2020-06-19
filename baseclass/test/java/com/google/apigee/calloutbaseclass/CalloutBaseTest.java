@@ -12,10 +12,9 @@
  * limitations under the License.
  */
 
-package com.google.apigee.calloutsbaseclass;
+package com.google.apigee.calloutbaseclass;
 
 import com.apigee.flow.message.MessageContext;
-import com.google.apigee.calloutbaseclass.CalloutsBase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +27,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-public final class CalloutsBaseTest {
+public final class CalloutBaseTest {
 
   private static final String ERROR_FLOW_VARIABLE = "callout_error";
   private static final String EXCEPTION_FLOW_VARIABLE = "callout_exception";
@@ -47,45 +47,8 @@ public final class CalloutsBaseTest {
   private static final String TEST_FLOW_VARIABLE_REFERENCE = "{request.queryparam.testFlowVar}";
   private static final String TEST_LOG_STATEMENT = "asdf123";
   private static final String TEST_LOG_STATEMENT2 = "defgh5678";
-
-  private static class CalloutsBaseTestImpl extends CalloutsBase {
-    public CalloutsBaseTestImpl(Map properties) {
-      super(properties);
-    }
-  }
-
-  abstract static class FakeMessageContext implements MessageContext {
-    private Map<String, Object> variables;
-
-    private Map<String, Object> getVariables() {
-      if (variables == null) {
-        variables = new HashMap<>();
-      }
-      return variables;
-    }
-
-    @Override
-    public Object getVariable(final String name) {
-      return getVariables().get(name);
-    }
-
-    @Override
-    public boolean setVariable(final String name, final Object value) {
-      getVariables().put(name, value);
-      return true;
-    }
-
-    @Override
-    public boolean removeVariable(final String name) {
-      if (getVariables().containsKey(name)) {
-        variables.remove(name);
-      }
-      return true;
-    }
-  }
-
-  private CalloutsBaseTestImpl calloutsBase;
   @Spy FakeMessageContext messageContext;
+  private CalloutBaseTestImpl calloutsBase;
 
   @Before
   public void init() {
@@ -95,7 +58,7 @@ public final class CalloutsBaseTest {
     properties.put(OPTIONAL_VARIABLE_EMPTY_VALUE_KEY, "");
     properties.put(REQUIRED_VARIABLE_KEY, REQUIRED_VARIABLE_VALUE);
     properties.put(REQUIRED_VARIABLE_EMPTY_VALUE_KEY, "");
-    calloutsBase = new CalloutsBaseTestImpl(properties);
+    calloutsBase = new CalloutBaseTestImpl(properties);
 
     messageContext.getVariables().clear();
     messageContext.setVariable(TEST_FLOW_VARIABLE, TEST_FLOW_VALUE);
@@ -103,24 +66,25 @@ public final class CalloutsBaseTest {
 
   @Test
   public void testGetOptionalProperty() {
-    String actual = calloutsBase.getOptionalProperty(OPTIONAL_VARIABLE_KEY, messageContext);
+    Optional<String> prop = calloutsBase.getOptionalProperty(OPTIONAL_VARIABLE_KEY, messageContext);
 
-    Assert.assertEquals(OPTIONAL_VARIABLE_VALUE, actual);
+    Assert.assertTrue(prop.isPresent());
+    Assert.assertEquals(Optional.of(OPTIONAL_VARIABLE_VALUE), prop);
   }
 
   @Test
   public void testGetOptionalPropertyThatDoesNotExist() {
-    String prop = calloutsBase.getOptionalProperty("", messageContext);
+    Optional<String> prop = calloutsBase.getOptionalProperty("", messageContext);
 
-    Assert.assertNull(prop);
+    Assert.assertTrue(prop.isEmpty());
   }
 
   @Test
   public void testGetOptionalPropertyEmptyString() {
-    String prop =
+    Optional<String> prop =
         calloutsBase.getOptionalProperty(OPTIONAL_VARIABLE_EMPTY_VALUE_KEY, messageContext);
 
-    Assert.assertNull(prop);
+    Assert.assertTrue(prop.isEmpty());
   }
 
   @Test
@@ -152,15 +116,14 @@ public final class CalloutsBaseTest {
   @Test
   public void testResolveVariableReferenceNonExistentReference() {
     String actual =
-            calloutsBase.resolveVariableReferences(NONEXISTENT_VARIABLE_REFERENCE, messageContext);
+        calloutsBase.resolveVariableReferences(NONEXISTENT_VARIABLE_REFERENCE, messageContext);
 
     Assert.assertEquals("", actual);
   }
 
   @Test
   public void testResolveVariableReferenceNotAReference() {
-    String actual =
-            calloutsBase.resolveVariableReferences(TEST_FLOW_VARIABLE, messageContext);
+    String actual = calloutsBase.resolveVariableReferences(TEST_FLOW_VARIABLE, messageContext);
 
     Assert.assertEquals(TEST_FLOW_VARIABLE, actual);
   }
@@ -195,9 +158,6 @@ public final class CalloutsBaseTest {
 
   @Test
   public void testLog() {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStream));
-
     calloutsBase.log(TEST_LOG_STATEMENT, messageContext);
     StackTraceElement ste = Thread.currentThread().getStackTrace()[1];
     String context =
@@ -206,15 +166,11 @@ public final class CalloutsBaseTest {
             ste.getClassName(), ste.getMethodName(), ste.getFileName(), ste.getLineNumber() - 1);
     String expected = TEST_LOG_STATEMENT + "\t\t" + context;
 
-    Assert.assertEquals(expected + "\n", outputStream.toString());
     Assert.assertEquals(expected, messageContext.getVariable(LOG_FLOW_VARIABLE));
   }
 
   @Test
   public void testMultipleLogStatements() {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStream));
-
     calloutsBase.log(TEST_LOG_STATEMENT, messageContext);
     calloutsBase.log(TEST_LOG_STATEMENT2, messageContext);
     StackTraceElement ste = Thread.currentThread().getStackTrace()[1];
@@ -230,7 +186,42 @@ public final class CalloutsBaseTest {
         String.format(
             "%s\t\t%s\n%s\t\t%s", TEST_LOG_STATEMENT, context1, TEST_LOG_STATEMENT2, context2);
 
-    Assert.assertEquals(expected + "\n", outputStream.toString());
     Assert.assertEquals(expected, messageContext.getVariable(LOG_FLOW_VARIABLE));
+  }
+
+  private static class CalloutBaseTestImpl extends CalloutBase {
+    public CalloutBaseTestImpl(Map properties) {
+      super(properties);
+    }
+  }
+
+  abstract static class FakeMessageContext implements MessageContext {
+    private Map<String, Object> variables;
+
+    private Map<String, Object> getVariables() {
+      if (variables == null) {
+        variables = new HashMap<>();
+      }
+      return variables;
+    }
+
+    @Override
+    public Object getVariable(final String name) {
+      return getVariables().get(name);
+    }
+
+    @Override
+    public boolean setVariable(final String name, final Object value) {
+      getVariables().put(name, value);
+      return true;
+    }
+
+    @Override
+    public boolean removeVariable(final String name) {
+      if (getVariables().containsKey(name)) {
+        variables.remove(name);
+      }
+      return true;
+    }
   }
 }

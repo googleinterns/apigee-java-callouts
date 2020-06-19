@@ -49,8 +49,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>${jdk.target.version}</source>
-          <target>${jdk.target.version}</target>
+          <source>11</source>
+          <target>11</target>
           <compilerArgs>
             <!-- <arg>-verbose</arg> -->
             <arg>-Xlint:unchecked,deprecation</arg>
