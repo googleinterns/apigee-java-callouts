@@ -104,6 +104,9 @@ public abstract class CalloutBase {
       String ref = matcher.group(2);
       String[] parts = ref.split(":", 2);
       Object v = messageContext.getVariable(parts[0]);
+      // If flow variable does not exist in messageContext, a default value can be specified using a
+      // colon. (e.g. "{flow.variable:default}" will use "default" as the value if "flow.variable"
+      // is not found)
       if (v != null) {
         sb.append((String) v);
       } else if (parts.length > 1) {
