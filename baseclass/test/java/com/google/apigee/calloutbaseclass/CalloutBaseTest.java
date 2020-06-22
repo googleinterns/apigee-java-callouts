@@ -42,10 +42,12 @@ public final class CalloutBaseTest {
   private static final String REQUIRED_VARIABLE_EMPTY_VALUE_KEY = "requiredVarEmpty";
   private static final String TEST_FLOW_VALUE = "test123";
   private static final String TEST_FLOW_VARIABLE = "request.queryparam.testFlowVar";
+  private static final String TEST_FLOW_VARIABLE_DEFAULT_VALUE = "default";
   private static final String TEST_FLOW_VARIABLE_REFERENCE = "{request.queryparam.testFlowVar}";
+  private static final String TEST_FLOW_VARIABLE_WITH_DEFAULT_VALUE = "{fake.value:default}";
   private static final String TEST_LOG_STATEMENT = "asdf123";
   private static final String TEST_LOG_STATEMENT2 = "defgh5678";
-  @Spy FakeMessageContext messageContext;
+  @Spy private FakeMessageContext messageContext;
   private CalloutBaseTestImpl calloutsBase;
 
   @Before
@@ -124,6 +126,15 @@ public final class CalloutBaseTest {
     String actual = calloutsBase.resolveVariableReferences(TEST_FLOW_VARIABLE, messageContext);
 
     Assert.assertEquals(TEST_FLOW_VARIABLE, actual);
+  }
+
+  @Test
+  public void testResolveVariableReferenceWithDefaultValue() {
+    String actual =
+        calloutsBase.resolveVariableReferences(
+            TEST_FLOW_VARIABLE_WITH_DEFAULT_VALUE, messageContext);
+
+    Assert.assertEquals(TEST_FLOW_VARIABLE_DEFAULT_VALUE, actual);
   }
 
   @Test

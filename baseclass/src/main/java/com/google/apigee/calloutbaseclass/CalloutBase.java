@@ -33,14 +33,14 @@ public abstract class CalloutBase {
   // Matches two words separated by a colon or semicolon and a space, intended for common error
   // strings.
   // (e.g. matches "example: error" or "example; error")
-  private static final String commonErrorPatternString = "^(.+?)[:;] (.+)$";
-  private static final Pattern commonErrorPattern = Pattern.compile(commonErrorPatternString);
+  private static final String COMMON_ERROR_PATTERN_STRING = "^(.+?)[:;] (.+)$";
+  private static final Pattern commonErrorPattern = Pattern.compile(COMMON_ERROR_PATTERN_STRING);
   // Matches any string between two curly braces, intended for flow variable references
   // (e.g. matches "{request.test}", but also matches "{asdf}")
-  private static final String variableReferencePatternString =
+  private static final String VARIABLE_REFERENCE_PATTERN_STRING =
       "(.*?)\\{([^\\{\\} :][^\\{\\} ]*?)\\}(.*?)";
   private static final Pattern variableReferencePattern =
-      Pattern.compile(variableReferencePatternString);
+      Pattern.compile(VARIABLE_REFERENCE_PATTERN_STRING);
 
   private final Map<String, String> properties;
 
