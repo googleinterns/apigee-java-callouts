@@ -38,7 +38,7 @@ api_domain="apigee.net"
 
 The `setExceptionVariable` method stores the exception, error and stacktrace into flow variables named `callout_exception`, `callout_error`, and `callout_stacktrace` respectively. You can inspect these values by downloading the trace on the Apigee API Proxies portal.
 
-The `log` method allows us to store a message in the `callout_log` flow variable for debugging. This can also be seen in the trace and should contain our message `"Debug Statement 1"` along with the line number, class and method where the message was logged. Note that subsequent calls to `log` will not overwrite previous log messages and all will be saved to the same flow variable.
+The `log` method allows us to store a message in the `callout_log` flow variable for debugging. This can also be seen in the trace and should contain our message `"Log statement before exception thrown"` along with the line number, class and method where the message was logged. Note that subsequent calls to `log` will not overwrite previous log messages and all will be saved to the same flow variable.
 
 ## License
 Copyright 2020 Google LLC
