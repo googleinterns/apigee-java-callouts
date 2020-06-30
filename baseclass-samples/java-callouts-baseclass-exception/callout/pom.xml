@@ -96,10 +96,6 @@
                 <copy todir="${apiproxy.java.rsrc.dir}">
                   <fileset dir="${project.build.directory}">
                     <include name="${project.artifactId}.jar"/>
-                    <!-- copy any required dependencies tht are not
-                    already included in the Edge runtime: -->
-
-                    <!--                    -->
                   </fileset>
                   <mapper type="flatten"/>
                 </copy>
