@@ -9,9 +9,9 @@ Make sure you have the following installed and available on your PATH
 (recognizable when you run, for example, <code>which curl</code>).
 
 * cURL Python **Cygwin on Windows**: If you're running Cygwin on Windows, you'll
-* also need the **doc2unix** utility. (The Cygwin installer lets you install the
-* utility.) See the [Windows/Cygwin Troubleshooting]
-* (#windowscygwin-troubleshooting) section for more information.
+also need the **doc2unix** utility. (The Cygwin installer lets you install the
+utility.) See the [Windows/Cygwin 
+Troubleshooting](#windowscygwin-troubleshooting) section for more information.
 
 
 ### Directions
