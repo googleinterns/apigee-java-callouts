@@ -25,8 +25,7 @@ environment.
 3. Deploy the samples.
 
     * To deploy individual samples, run `deploy.sh` from the `./setup`
-directory. Follow prompts. * To deploy all samples, run `deploy_all.sh` from the
-`./setup` directory.  Follow prompts.
+directory. Follow prompts.
 
 You can now go to the Apigee management UI and see the deployed proxies.
 
@@ -44,7 +43,7 @@ install it.
 
 To run dos2unix recursively on the samples:
 
-1. cd to the `/api-platform-samples` directory (the samples root directory).
+1. cd to the `/baseclass-samples` directory (the samples root directory).
 
 2. Run the following command:
 
