@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<JavaCallout name="java-callouts-baseclass-exception">
-        <ClassName>com.apigeesample.BaseclassException</ClassName>
-        <ResourceURL>java://java-callouts-baseclass-exception.jar</ResourceURL>
-        <Properties />
-</JavaCallout>

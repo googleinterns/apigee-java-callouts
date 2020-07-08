@@ -3,8 +3,7 @@
     <Description/>
     <FaultRules/>
     <PreFlow name="PreFlow">
-        <Request>
-        </Request>
+        <Request/>
         <Response>
             <Step>
                 <Name>java-callouts-baseclass-sample-debugging</Name>

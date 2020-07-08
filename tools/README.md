@@ -29,8 +29,8 @@ the API already exists, then the deploy tool will import this as a new revision
 of the existing API.
 
 * `-u` Your username and password for your account on enterprise.apigee.com.
-* ([Register for an account for
-* free.](https://accounts.apigee.com/accounts/sign_up))
+([Register for an account for 
+free.](https://accounts.apigee.com/accounts/sign_up))
 
 * `-o` The Apigee organization in which youhave an account. To obtain this
 information, login to enterprise.apigee.com  and view account settings.
@@ -58,9 +58,8 @@ points to the directory that  contains the directory `/apiproxy`, and not to the
 `/apiproxy` directory itself.
 
 * `-h` **Optional** The base URL for the Apigee API. You do not need to specify
-* or modify this for cloud/trial accounts. Defaults to
-* `https://api.enterprise.apigee.com`
-
+or modify this for cloud/trial accounts. Defaults to 
+`https://api.enterprise.apigee.com`
 
 ---
 
