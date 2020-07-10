@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JavaCallout name="java-callouts-baseclass-sample-debugging">
+        <ClassName>com.apigeesample.BaseclassSampleDebugging</ClassName>
+        <ResourceURL>java://java-callouts-baseclass-sample-debugging.jar</ResourceURL>
+        <Properties />
+</JavaCallout>
