@@ -23,8 +23,9 @@ import com.google.apigee.calloutbaseclass.CalloutBase;
 import java.util.Map;
 
 /**
- * Sample Java Callout utilizing the getOptionalProperty and getRequiredProperty methods of Java
- * Callout Base Class.
+ * Sample Java Callout utilizing the {@link CalloutBase#getOptionalProperty(String, MessageContext)}
+ * and {@link CalloutBase#getRequiredProperty(String, MessageContext)} methods of Java Callout Base
+ * Class.
  */
 public class BaseclassSampleHello extends CalloutBase implements Execution {
 
