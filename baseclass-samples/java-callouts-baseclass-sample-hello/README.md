@@ -11,7 +11,7 @@ Note that since `"name"` is an optional property, the proxy will still work
 without a `"name"` value whereas the `"message"` is required and will throw an
 exception if it is missing. 
 
-Also note that the initial value for "`name`" is a flow variable reference and
+Also note that the initial value for `"name"` is a flow variable reference and
 that the base class allows us to automatically resolve this reference. 
 
 ## Initial Setup

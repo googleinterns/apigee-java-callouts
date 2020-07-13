@@ -39,7 +39,7 @@ public class BaseclassSampleHello extends CalloutBase implements Execution {
    *
    * @param messageContext Object allowing access to entities inside the flow
    * @param executionContext Object allowing access to proxy execution context
-   * @return A message string constructed using the properties map
+   * @return A successful execution result after message is constructed
    */
   public ExecutionResult execute(MessageContext messageContext, ExecutionContext executionContext) {
     try {
@@ -52,7 +52,8 @@ public class BaseclassSampleHello extends CalloutBase implements Execution {
   }
 
   /**
-   * Creates a message string using the name and message property values.
+   * Creates a message string using the name and message property values. If no name is provided in
+   * the properties map, then the default value of Stranger is used.
    *
    * @param messageContext Object allowing access to entities inside the flow
    * @return A string consisting of "Hi" followed by the name and message values from the properties
