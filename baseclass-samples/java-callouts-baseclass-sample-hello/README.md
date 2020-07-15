@@ -60,14 +60,16 @@ look like this: `Hi Alice! Happy Birthday`.
 
 ## Further Details
 
-The name Alice is taken from the `"name"` query parameter. You can change this
+The name `Alice` is taken from the `"name"` query parameter. You can change this
 in `invoke.sh` to something else or even remove the query parameter entirely.
 Inside the proxy properties fields the value for `"name"` is actually
 `{request.queryparam.name}` which is a flow variable reference that our callout
 is able to resolve. 
 
 The other property we have is the `"message"` which contains `Happy Birthday`.
-You can change this as well to modify the response.
+You can change this in
+`apiproxy/policies/java-callouts-baseclass-sample-hello.xml` to modify the
+response.
 
 ## License Copyright 2020 Google LLC
 
