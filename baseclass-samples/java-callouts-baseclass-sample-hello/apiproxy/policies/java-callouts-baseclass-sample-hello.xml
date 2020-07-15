@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JavaCallout name="java-callouts-baseclass-sample-hello">
+        <ClassName>com.apigeesample.BaseclassSampleHello</ClassName>
+        <ResourceURL>java://java-callouts-baseclass-sample-hello.jar</ResourceURL>
+        <Properties>
+          <Property name="name">{request.queryparam.name}</Property>
+          <Property name="message">Happy Birthday</Property>
+        </Properties>
+</JavaCallout>
